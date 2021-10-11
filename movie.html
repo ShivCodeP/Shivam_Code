@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie</title>
+</head>
+<body>
+    
+    <h1>Search Movie</h1>
+    <input type="text" id="movie" placeholder="Enter Movie Name" />
+    <button onclick="showDetail()">Search</button>
+    <div id="details"></div>
+     
+</body>
+</html>
+
+    <script>
+        
+        let container = document.getElementById('details');
+
+        async function showDetail() {
+
+            let movie = document.getElementById('movie').value;
+
+            let res = await fetch(`https://www.omdbapi.com/?t=${movie}&apikey=4b125d6`)
+            
+            let data = await res.json();
+            
+            console.log(data);
+            let arr = [];
+
+            for(let keys in data) {
+                arr.push(`${keys} : ${data[keys]}`);
+            }
+            
+            showmovie(arr);
+        }
+
+        function showmovie(data) {
+            container.innerHTML = null;
+
+            for(let i=0; i<data.length; i++) {
+               let str = data[i];
+               let d = document.createElement('p');
+               d.textContent = str;
+               container.append(d);
+            }
+
+
+        }
+        
+        
+
+    </script>
