@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+
+  <style>
+    body {
+      background-color: rgb(22, 22, 22);
+      position: absolute;
+      justify-content: center;
+    }
+    input {
+      width: 500px;
+      font-size: 30px;
+      margin-left: 20px;
+      background-color: rgb(37, 37, 37);
+      color: white;
+
+    }
+
+    #movies {
+      height: 300px;
+      width: 506px;
+      margin-left: 20px;
+      background-color: rgb(37, 37, 37);
+      color: white;
+      font-size: 25px;
+      border: 1px solid black;
+      overflow: scroll;
+      border-top: none;
+    }
+    #show_movies {
+      display: block;
+      width: 1000px;
+      height: 800px;
+      position: absolute;
+      padding: 60px;
+      color: white;
+      top: 0px;
+      left: 600px;
+      /* background-color: white; */
+    }
+
+
+    .line {
+      width: 4px;
+      height: 800px;
+      position: absolute;
+      top: 0px;
+      background-color: white;
+      margin-left: 600px;
+    }
+  </style>
+  <body>
+    <div>
+      <h1 style="color: white; text-align: center">MOVIES FINDER</h1>
+      <input oninput="debounce(main,1000)" type="text" id="movie" placeholder="Enter movie name" />
+      <div id="movies"></div>
+      <div class="line"></div>
+    </div>
+    <div id="show_movies"></div>
+  </body>
+</html>
+<script>
+
+   let movie_div = document.getElementById("movies");
+   let show_movies = document.getElementById('show_movies');
+   let timerid;
+    // search Movies
+
+    async function searchMovies(movie_name) {
+       try {
+        let res = await fetch(`https://www.omdbapi.com/?apikey=d806bd70&s=${movie_name}`);
+
+        let data = await res.json();
+        // console.log(data);
+        return data;
+       } catch (e) {
+           console.log("e:" , e);
+       }
+    }
+
+    // searchMovies("gadar");
+
+
+    function appendMovies(movies) {
+
+      if(movies === undefined) {
+          return false;
+      }
+
+      movie_div.innerHTML = null;
+
+      movies.forEach(function (movie) {
+
+        let p = document.createElement('p');
+
+        p.innerText = movie.Title;
+
+        p.addEventListener("click", async function() {
+          // console.log(movie)
+          try {
+            let idimdb = movie.imdbID;
+
+            let brief = await fetch(`https://www.omdbapi.com/?i=${idimdb}&apikey=4b125d6`);
+            
+            let brief_data = await brief.json();
+            console.log(brief_data);
+
+
+            let title = document.createElement('h1');
+            title.innerHTML = brief_data.Title;
+  
+            let poster = document.createElement('img');
+            poster.src = brief_data.Poster;
+
+            let imdb = document.createElement('p');
+            imdb.innerText = "IMDB Rating: " + brief_data.imdbRating;
+            
+            let plot = document.createElement('p');
+            plot.innerText = brief_data.Plot;
+
+            let actor = document.createElement('p');
+            actor.innerText = "Actor" + brief_data.Actors;
+
+            
+            show_movies.append(title,poster,imdb,actor,plot);
+
+          } catch {
+            console.log('error');
+          }
+        });
+
+        movie_div.append(p);
+      });
+        
+
+    }
+
+    async function main() {
+        // console.log("work")
+       let name = document.getElementById('movie').value;
+     
+       // get search movie 
+
+       let res = await searchMovies(name);
+
+       let movie_data = res.Search;
+      //  console.log(movie_data);
+       
+       appendMovies(movie_data);
+
+       console.log("res:" ,res);
+
+    }
+
+    function debounce(func, time) {
+
+    //    lets talk about A 
+    // func = main() 
+   if(timerid) {
+       clearTimeout(timerid);
+   }
+
+
+    timerid = setTimeout(function() {
+
+       func();
+    },time)
+
+    }
+
+
+    
+
+</script>

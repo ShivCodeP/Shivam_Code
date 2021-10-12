@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trending</title>
+
+    <style>
+
+        body {
+            background-color: rgb(22, 22, 22);
+        }
+
+        #show_trend {
+            background-color: rgb(31, 30, 30);
+            display: grid;
+            gap: 10px;
+            grid-template-columns: repeat(4,400px);
+            color: white;
+            
+        }
+        .box {
+            background-color: rgb(37, 37, 37);
+            width: 100%;
+            height: 900px;
+            color: white;
+        }
+
+        
+        img {
+           width: 100%;
+           height: 60%;
+        }
+
+    </style>
+
+</head>
+<body>
+    <h1 style="color: white; text-align: center;">Trending Movies</h1>
+    <button onclick="showtrending()">Trending</button>
+    <div id="show_trend"></div>
+</body>
+</html>
+
+<script>
+
+async function showtrending() {
+
+    let show = document.getElementById('show_trend');
+
+    try {
+      
+       let res = await fetch(`https://api.themoviedb.org/4/list/1?api_key=0331bead9b0310ebcf5c5c5989704ff3`);
+    //    console.log(res);
+       let data = await res.json();
+    
+       let movies_trend = data.results;
+
+       movies_trend.forEach(function (movie) {
+            
+        let div = document.createElement('div');
+        div.className = "box";
+
+        let poster = document.createElement('img');
+        poster.src = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
+
+        let date = document.createElement('p');
+        date.innerText = "Released Date: " + movie.release_date;
+
+        let title = document.createElement('h2');
+        title.innerText = movie.title;
+
+        let imdb = document.createElement('p');
+        imdb.innerText = " imdb Rating: " + movie.vote_average;
+
+        let over = document.createElement('p');
+        over.innerText = movie.overview;
+
+        div.append(poster,title,date,imdb,over);
+
+        show.append(div);
+
+       }); 
+       console.log(movies_trend);
+
+    } catch {
+        console.log('url not found')
+    }
+
+}
+
+</script>
+
+
+
+<!-- 0331bead9b0310ebcf5c5c5989704ff3 -->
