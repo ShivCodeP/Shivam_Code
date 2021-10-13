@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Document</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200&family=Oswald:wght@300&display=swap"
+    rel="stylesheet">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <style>
+    header {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .menu {
+      display: inline-block;
+      cursor: pointer;
+    }
+
+    .bar1,
+    .bar2,
+    .bar3 {
+      width: 35px;
+      height: 5px;
+      background-color: #333;
+      margin: 6px 0;
+    }
+
+    #videos {
+      margin-top: 30px;
+      display: grid;
+      gap: 20px;
+      grid-template-columns: repeat(5, 300px);
+    }
+
+    #icon {
+      display: flex;
+      width: 100%;
+      height: 45px;
+      justify-content: space-between;
+    }
+
+    .youtube_icon {
+      font-size: 30px;
+      font-weight: bolder;
+      letter-spacing: -0.5px;
+      font-family: 'Oswald', sans-serif;
+    }
+
+    #country {
+      color: green;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: bold;
+    }
+
+    .search_bar {
+      display: flex;
+      width: 800px;
+    }
+    #query {
+      width:  600px;
+      height: 50px;
+      font-size: 24px;
+      padding-left: 10px;
+    }
+
+
+    .micro_phone {
+      height: 60px;
+      width: 60px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 60px;
+      background-color: rgb(230, 230, 248);
+    }
+
+    #right_icon {
+      display: flex;
+      width: 500px;
+      gap: 50px;
+      align-items: center;
+      justify-content: space-around;
+    }
+
+    #right_icon img {
+      width: 40px;
+      height: 40px;
+    }
+
+    #user {
+      height: 60px;
+      width: 60px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 60px;
+      background-color: indigo;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div style="display: flex;gap: 10px;">
+      <div class="menu">
+        <div class="bar1"></div>
+        <div class="bar2"></div>
+        <div class="bar3"></div>
+      </div>
+      <div id="icon">
+        <div style="display: flex;align-items: center;">
+          <i class="fa fa-youtube-play" style="font-size:48px;color:red"></i><strong class="youtube_icon">Youtube</strong>
+        </div>
+        <span id="country">IN</span>
+      </div>
+      
+    </div>
+    <div class="search_bar">
+      <input type="text" id="query" placeholder="Search for a Video" />
+      <button onclick="searchVideos()" style="width: 80px;height: 57px;">
+        <img src="https://img.icons8.com/ios-glyphs/30/000000/search--v1.png"/>
+      </button>
+      <div class="micro_phone">
+        <img src="https://img.icons8.com/material-sharp/24/000000/microphone--v1.png" style="width: 30px; height: 30px;"/>
+      </div>
+    </div>
+<div id="right_icon">
+  <img src="https://img.icons8.com/material-outlined/24/000000/video-call.png"/>
+  <img src="https://img.icons8.com/material-outlined/24/000000/small-icons--v1.png"/>
+  <img src="https://img.icons8.com/material-outlined/24/000000/appointment-reminders--v1.png"/>
+  <div id="user"></div>
+
+</div>
+
+  </header>
+
+
+
+  <div id="videos"></div>
+</body>
+
+</html>
+
+<script>
+
+  let videos = document.getElementById('videos')
+  async function searchVideos() {
+    let query = document.getElementById('query').value;
+    var res = await fetch(`https://youtube.googleapis.com/youtube/v3/search?q=${query}&type=video&key=AIzaSyBsyjA5gGvG5n2o-jfxD33I8MugZspfi5o&maxResults=20`);
+    var data = await res.json();
+    //  console.log(res);
+
+    console.log(data);
+    appendVideos(data.items);
+  }
+
+  function appendVideos(video_data) {
+
+    videos.innerHTML = null;
+
+    video_data.forEach(({ id: { videoId } }) => {    //nested destructuring
+
+      console.log(videoId);
+
+      let div = document.createElement('div');
+      div.style.cssText = "width:100%;height:200px;"
+
+      // embed youtube video 
+
+      div.innerHTML = `<iframe width="300" height="200" src="https://www.youtube.com/embed/${videoId}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`
+
+      videos.append(div);
+    });
+  }
+
+</script>
+
+
+<!-- https://youtube.googleapis.com/youtube/v3/search?q=csk&type=video&key=[YOUR_API_KEY] -->
