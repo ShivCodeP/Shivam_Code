@@ -32,12 +32,15 @@
       margin: 6px 0;
     }
 
-    #videos {
+    #videos,#Popular {
       margin-top: 30px;
       display: grid;
+      justify-content: center;
       gap: 20px;
       grid-template-columns: repeat(5, 300px);
     }
+
+
 
     #icon {
       display: flex;
@@ -72,6 +75,7 @@
 
 
     .micro_phone {
+      margin-left: 10px;
       height: 60px;
       width: 60px;
       display: flex;
@@ -83,20 +87,20 @@
 
     #right_icon {
       display: flex;
-      width: 500px;
-      gap: 50px;
+      width: 400px;
+      gap: 20px;
       align-items: center;
       justify-content: space-around;
     }
 
     #right_icon img {
-      width: 40px;
-      height: 40px;
+      width: 30px;
+      height: 30px;
     }
 
     #user {
-      height: 60px;
-      width: 60px;
+      height: 40px;
+      width: 40px;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -108,7 +112,7 @@
 
 <body>
   <header>
-    <div style="display: flex;gap: 10px;">
+    <div style="display: flex;gap: 10px;align-items: center;">
       <div class="menu">
         <div class="bar1"></div>
         <div class="bar2"></div>
@@ -123,7 +127,7 @@
       
     </div>
     <div class="search_bar">
-      <input type="text" id="query" placeholder="Search for a Video" />
+      <input type="text" id="query" placeholder="Search" />
       <button onclick="searchVideos()" style="width: 80px;height: 57px;">
         <img src="https://img.icons8.com/ios-glyphs/30/000000/search--v1.png"/>
       </button>
@@ -142,22 +146,50 @@
   </header>
 
 
-
+  <h1 style="margin-left: 50px;" id="related_head"></h1>
   <div id="videos"></div>
+  <h1 style="margin-left: 50px;">Popular</h1>
+  <div id="Popular">
+  </div>
 </body>
 
 </html>
 
 <script>
 
+  let popular_cont = document.getElementById("Popular");
+  
+  fetch('https://youtube.googleapis.com/youtube/v3/videos?chart=mostPopular&maxResults=20&regionCode=IN&key=AIzaSyBsyjA5gGvG5n2o-jfxD33I8MugZspfi5o')
+  .then((res)=> {
+    return res.json();
+  })
+  .then((res)=> {
+    // console.log(res);
+
+    showPopular(res.items);
+
+  })
+  .catch((err)=> {
+    console.log(err);
+  })
+
+
   let videos = document.getElementById('videos')
+  let related = document.getElementById('related_head');
+
   async function searchVideos() {
+
+    related.innerText = null;
+
     let query = document.getElementById('query').value;
     var res = await fetch(`https://youtube.googleapis.com/youtube/v3/search?q=${query}&type=video&key=AIzaSyBsyjA5gGvG5n2o-jfxD33I8MugZspfi5o&maxResults=20`);
     var data = await res.json();
     //  console.log(res);
 
     console.log(data);
+
+    related.innerText = "Related Videos";
+
     appendVideos(data.items);
   }
 
@@ -167,7 +199,7 @@
 
     video_data.forEach(({ id: { videoId } }) => {    //nested destructuring
 
-      console.log(videoId);
+      // console.log(videoId);
 
       let div = document.createElement('div');
       div.style.cssText = "width:100%;height:200px;"
@@ -179,6 +211,25 @@
       videos.append(div);
     });
   }
+
+
+  function showPopular(data) {
+    // console.log(data);
+
+    data.forEach(({ id })=> {
+   
+      // console.log(id);
+      let div = document.createElement('div');
+      div.style.cssText = "width: 100%; height: 200px;"
+
+      div.innerHTML = `<iframe width="300" height="200" src="https://www.youtube.com/embed/${id}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`
+
+      popular_cont.append(div);
+    }) 
+
+  }
+
+
 
 </script>
 
