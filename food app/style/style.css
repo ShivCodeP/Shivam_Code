@@ -1,0 +1,120 @@
+*{
+    margin: 0px;
+}
+
+#navbar{
+    display: flex;
+    background-color: rgb(233, 233, 233);
+    justify-content: space-between;
+    height: 120px;
+    align-items: center;
+    z-index: 1;
+}
+
+#options {
+    display: flex;
+    gap: 30px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+#logo {
+    height: 100%;
+    width: 10%;
+}
+
+#logo img {
+    width: 100%;
+    height: 100%;
+}
+
+#dropdown {
+    position: absolute;
+    width: auto;
+    left: 180px;
+    right: 0px;
+    height: 80px;
+    top: 80px;
+    background-color: grey;
+    display: flex;
+    visibility: hidden;
+    align-items: center;
+    justify-content: center;
+    z-index: 7;
+
+}
+
+#search_food {
+    width: 55%;
+    height: 70%;
+    padding-left: 20px;
+    font-size: 20px;
+}
+
+#search_btn {
+    width: 60px;
+    height: 79%;
+}
+
+#result_de {
+    display: flex;
+    visibility: hidden;
+    flex-direction: column;
+    gap:2px;
+    width: 600px;
+    height: 400px;
+    overflow: scroll;
+    position: absolute;
+    top: 140px;
+    left: 600px;
+    z-index: 6;
+    background-color: rgb(249, 252, 255);
+
+}
+
+.box {
+    width: 100%;
+    height: 120px;
+    display: flex;
+    gap: 10px;
+
+}
+
+#display {
+    width: 100%;
+    height: 800px;
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    z-index: -1;
+}
+
+#recipe {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+#latest {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+#home {
+    margin-top: 50px;
+    display: grid;
+    gap: 20px;
+    grid-template-columns: repeat(4,24%);
+    justify-content: center;
+    align-items: center;
+}
+
+.home_box img{
+    width: 100%;
+    height: 70%;
+}

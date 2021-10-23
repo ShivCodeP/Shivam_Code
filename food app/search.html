@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Tasty Foods</title>
+    <link rel="stylesheet" href="./style/style.css">
+</head>
+
+<body>
+    <div id="navbar">
+    </div>
+
+    <div id="display"></div>
+
+</body>
+
+</html>
+
+<script type="module">
+    var timerid;
+     
+    let container = document.getElementById("navbar");
+
+    import navbar from "./components/navbar.js";
+    container.innerHTML = navbar();
+
+    // console.log(container)
+
+    var search_box = document.getElementById("dropdown");
+    
+    var search_dropdown = document.getElementById("search_link");
+    console.log(search_dropdown)
+    
+    search_dropdown.addEventListener("mouseover",function () {
+    
+      // console.log("working")
+      showdropDown();
+    
+    });
+    function showdropDown() {
+      
+      search_box.style.visibility = "visible";
+    }
+    
+    container.addEventListener("mouseleave",function () {
+    
+    hidedropdown();
+    })
+    
+    function hidedropdown() {
+     search_box.style.visibility = "hidden";
+    
+    }
+
+
+    let input_data = document.getElementById("search_food");
+
+    input_data.addEventListener("input", function () {
+        debounce(main,1000);
+    });
+
+    function debounce(func, time) {
+
+        //    lets talk about A 
+        // func = main() 
+        if (timerid) {
+            clearTimeout(timerid);
+        }
+
+
+        timerid = setTimeout(function () {
+
+            func();
+        }, time)
+
+    }
+
+    async function main() {
+
+        let food = document.getElementById("search_food").value;
+        console.log(food);
+
+        let data = await searchFood(food);
+
+        console.log(data);
+
+        appendData(data);
+    }
+
+    async function searchFood(food) {
+
+        try {
+            let data = await fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${food}`);
+            let meal = await data.json();
+            // console.log(meal)
+
+            return meal;
+
+        }
+        catch (err) {
+            console.log(err);
+        }
+
+    }
+
+    let result_de= document.getElementById("result_de")
+
+    function appendData({meals}) {
+        console.log(meals);
+        result_de.innerHTML = null;
+        result_de.style.visibility = "visible";
+        var div_scroll = document.createElement("div");
+
+        meals.forEach((el) => {
+            let div_inner = document.createElement('div');
+            div_inner.className = "box";
+
+            let image = document.createElement('img');
+            image.src = el.strMealThumb;
+            image.style.cssText = "width:30%;height:100%"
+
+            let div_instruction = document.createElement('div');
+            let head = document.createElement('h2');
+            head.innerText = el.strMeal;
+
+            let recipe = document.createElement('p');
+            div_instruction.style.cssText = "width:65%;height:100%;display:flex;flex-direction:column;gap:10px;background-color:white;z-index:4";
+
+            recipe.innerText = el.strInstructions;
+            recipe.style.cssText = "width:100%;overflow:hidden"
+
+            div_instruction.append(head,recipe);
+
+            div_inner.append(image,div_instruction);
+            div_inner.addEventListener("click",function() {
+                // result_de.style.visibility = "hidden";
+                showFood(el);
+            })
+
+            div_scroll.append(div_inner)
+
+        })
+        result_de.append(div_scroll)
+         
+    }
+
+    var display = document.getElementById("display");
+
+    function showFood(data) {
+        // console.log(data);
+           display.innerHTML = null;
+           result_de.innerHTML = null;
+           result_de.style.visibility = "hidden"
+
+            let image = document.createElement('img');
+            image.src = data.strMealThumb;
+            image.style.cssText = "width:30%;height:100%"
+
+            let div_instruction = document.createElement('div');
+            let head = document.createElement('h2');
+            head.innerText = data.strMeal;
+
+            let recipe = document.createElement('p');
+            div_instruction.style.cssText = "width:65%;height:100%;display:flex;flex-direction:column;gap:10px;background-color:white;font-size:30px";
+            let area = document.createElement('h2');
+            area.innerText = "Food Origin: " + data.strArea;
+            let recipe_head = document.createElement('h2');
+            recipe_head.innerHTML = "Recipe"
+            recipe.innerText = data.strInstructions;
+            recipe.style.cssText = "width:100%;overflow:hidden"
+
+            div_instruction.append(head,area,recipe_head,recipe);
+            display.append(image,div_instruction);
+           
+
+    }
+
+
+
+</script>

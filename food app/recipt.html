@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day Best Recipe</title>
+    <link rel="stylesheet" href="./style/style.css">
+</head>
+
+<body>
+    <div id="navbar"></div>
+    <div id="recipe"></div>
+</body>
+
+</html>
+
+<script type="module">
+    let container = document.getElementById("navbar");
+
+    import navbar from "./components/navbar.js";
+    container.innerHTML = navbar();
+
+    import searchbar from "./scripts/showsearchbar.js";
+
+    searchbar();
+
+    let reci_disp = document.getElementById("recipe");
+
+    let head = document.createElement("h2");
+    head.innerHTML = "RECIPE OF THE DAY";
+
+    fetch("https://www.themealdb.com/api/json/v1/1/random.php")
+    .then((res) => {
+        return res.json();
+        
+    })
+    .then((res) => {
+        console.log(res)
+        appendData(res);
+
+    })
+    .catch((err) => {
+        console.log(err);
+    })
+
+    let recipe = document.getElementById("recipe");
+
+    function appendData({ meals }) {
+        console.log(meals)
+        let image = document.createElement('img');
+        image.src = meals[0].strMealThumb;
+
+        let name = document.createElement('h2');
+        name.innerHTML = meals[0].strMeal;
+
+        let location = document.createElement('h3');
+        location.innerHTML = meals[0].strArea;
+
+        let recipe_detail = document.createElement('p');
+        recipe_detail.innerText = meals[0].strInstructions;
+        recipe_detail.style.fontSize = "25px"
+        
+        recipe.append(head,image,name,location,recipe_detail);
+    }
+
+</script>

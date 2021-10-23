@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Menu</title>
+    <link rel="stylesheet" href="./style/style.css" >
+</head>
+<body>
+    <div id="navbar"></div>
+    <div id="home"></div>
+
+</body>
+</html>
+
+<script type="module">
+      let container = document.getElementById("navbar");
+
+      import navbar from "./components/navbar.js";
+      container.innerHTML = navbar();
+      
+      import searchbar from "./scripts/showsearchbar.js";
+
+      searchbar();
+
+      fetch("https://www.themealdb.com/api/json/v1/1/filter.php?a=Indian")
+      .then((res) => {
+          return res.json();
+      })
+      .then((res) => {
+          appendData(res);
+      })
+      .catch((err) => {
+          console.log(err);
+      })
+
+      let home = document.getElementById("home");
+
+      function appendData({meals}) {
+          console.log(meals);
+          meals.forEach(({strMeal,strMealThumb}) => {
+              let div = document.createElement('div');
+              div.className = "home_box";
+
+              let image = document.createElement("img");
+              image.src = strMealThumb;
+
+              let name = document.createElement("h2");
+              name.innerText = strMeal;
+
+              div.append(image,name);
+
+              home.append(div);
+          })
+      }
+
+</script>
