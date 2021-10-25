@@ -208,14 +208,14 @@
 </html>
 
 <script>
-
+  var data = JSON.parse(localStorage.getItem("login"));
+  
+  if(data.length > 0) {
   let user = document.getElementById("user");
   let user_dropdown_sign = document.getElementById("a_sign_in");
   let user_dropdown_register = document.getElementById("a_register_now");
   user_dropdown_register.addEventListener("click",logout);
 
-  var data = JSON.parse(localStorage.getItem("login"));
-  if(data.length >= 0) {
     user.innerText = data[data.length-1].username.toUpperCase()[0];
     user_dropdown_sign.innerText = data[data.length-1].username;
     user_dropdown_register.innerText = "Logout";
@@ -229,7 +229,7 @@
     return res.json();
   })
   .then((res)=> {
-    // console.log(res);
+    console.log(res);
 
     showPopular(res.items);
 
