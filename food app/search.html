@@ -34,12 +34,8 @@
     var search_dropdown = document.getElementById("search_link");
     console.log(search_dropdown)
     
-    search_dropdown.addEventListener("mouseover",function () {
-    
-      // console.log("working")
-      showdropDown();
-    
-    });
+    search_dropdown.addEventListener("mouseover",showdropDown);
+
     function showdropDown() {
       
       search_box.style.visibility = "visible";
