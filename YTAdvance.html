@@ -104,6 +104,9 @@
       display: flex;
       justify-content: center;
       align-items: center;
+      color: white;
+      font-size: 25px;
+      font-weight: bold;
       border-radius: 60px;
       background-color: indigo;
     }
@@ -205,6 +208,12 @@
 </html>
 
 <script>
+
+  let user = document.getElementById("user");
+
+  var data = JSON.parse(localStorage.getItem("login"));
+  console.log(data);
+  user.innerText = data[data.length-1].username.toUpperCase()[0];
 
   let popular_cont = document.getElementById("Popular");
   
