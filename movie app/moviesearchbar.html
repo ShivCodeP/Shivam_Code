@@ -8,15 +8,17 @@
   </head>
 
   <style>
+    *{
+      margin: 0px;
+    }
     body {
       background-color: rgb(22, 22, 22);
-      position: absolute;
-      justify-content: center;
+
     }
     input {
-      width: 500px;
+      width: 83%;
+      margin-left: 40px;
       font-size: 30px;
-      margin-left: 20px;
       background-color: rgb(37, 37, 37);
       color: white;
 
@@ -24,8 +26,10 @@
 
     #movies {
       height: 300px;
-      width: 506px;
-      margin-left: 20px;
+      width: 84%;
+      margin-left: 40px;
+      padding: 10px;
+      box-sizing: border-box;
       background-color: rgb(37, 37, 37);
       color: white;
       font-size: 25px;
@@ -34,35 +38,64 @@
       border-top: none;
     }
     #show_movies {
-      display: block;
-      width: 1000px;
+      width: 58%;
       height: 800px;
-      position: absolute;
       padding: 60px;
       color: white;
-      top: 0px;
-      left: 600px;
+      font-size: 20px;
       /* background-color: white; */
+    }
+
+    #display {
+      width: 100%;
+      display: flex;
     }
 
 
     .line {
       width: 4px;
       height: 800px;
-      position: absolute;
-      top: 0px;
       background-color: white;
-      margin-left: 600px;
     }
+
+    #navbar {
+      width: 100%;
+      height: 50px;
+      background-color: rgb(44, 43, 43);
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    #option {
+      width: 30%;
+      display: flex;
+      font-size: 25px;
+      align-items: center;
+      /* gap: 10px; */
+      justify-content: space-between;
+    }
+
   </style>
   <body>
-    <div>
-      <h1 style="color: white; text-align: center">MOVIES FINDER</h1>
-      <input oninput="debounce(main,1000)" type="text" id="movie" placeholder="Enter movie name" />
-      <div id="movies"></div>
-      <div class="line"></div>
+    <div id="navbar">
+       <div id="logo"><img src="./3a646af49b26264ee7d575229475c939.jpg" alt="logo" style="width: 100px;height: 60px;"></div>
+       <div id="option">
+         <div id="home"><a href="./moviesearchbar.html">Home</a></div>
+         <div id="trending"><a href="./trending.html">Trending</a></div>
+         <div id="login"><a href="./sign.html">Login</a></div>
+       </div>
     </div>
-    <div id="show_movies"></div>
+    <div id="display">
+      <div style="width: 60%;display: flex;flex-direction: column;">
+        <h1 style="color: white;text-align: center;">MOVIES FINDER</h1>
+        <input oninput="debounce(main,1000)" type="text" id="movie" placeholder="Enter movie name" />
+        <div id="movies"></div>
+      </div>
+      <div class="line"></div>
+      <div id="show_movies"></div>
+    </div>
   </body>
 </html>
 <script>
@@ -99,12 +132,15 @@
       movies.forEach(function (movie) {
 
         let p = document.createElement('p');
+        p.style.border = "2px solid black";
+        p.style.padding = "10px";
 
         p.innerText = movie.Title;
 
         p.addEventListener("click", async function() {
           // console.log(movie)
           try {
+            show_movies.innerHTML = null;
             let idimdb = movie.imdbID;
 
             let brief = await fetch(`https://www.omdbapi.com/?i=${idimdb}&apikey=4b125d6`);

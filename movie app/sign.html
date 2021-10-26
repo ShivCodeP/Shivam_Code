@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign-up</title>
+    <style>
+        #Sign-up {
+            width: 100%;
+        }
+        #Sign-in {
+            width: 100%;
+        }
+        #signup-form,#signin-form {
+            display: flex;
+            gap: 10px;
+            flex-direction: column;
+        }
+
+        input {
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div style="margin: auto;width: 300px;">
+
+        <div id="Sign-up"> 
+            <h1>Sign-Up</h1>
+             <form onsubmit = "Signup(event)" id="signup-form">
+                 <input type="text" id="name" placeholder="Name"/>
+                 <input type="email"  id="email" placeholder="Email"/>
+                 <input type="password" id="password" placeholder="Password" />
+                 <input type="text" id="username" placeholder="Username"/>
+                 <input type="number" id="mobile" placeholder="Mobile Number"/>
+                 <input type="text" id="description" placeholder="Description"/>
+                 <input type="submit">
+             </form>
+        </div>
+        <div id="Sign-in"> 
+            <h1>Sign-In</h1>
+             <form onsubmit = "Signin(event)" id="signin-form">
+                <input type="text" id="user" placeholder="Username"/>
+                 <input type="password" id="pass" placeholder="Password" />
+                 <input type="submit">
+             </form>
+        </div>
+    </div>
+</body>
+</html>
+<script>
+    function Signup(e) {
+        e.preventDefault();
+
+        let form = document.getElementById("signup-form");
+
+        let user_data = {
+            name: form.name.value,
+            email: form.email.value,
+            password: form.password.value,
+            username: form.username.value,
+            mobile: form.mobile.value,
+            description: form.description.value,
+        };
+
+        user_data = JSON.stringify(user_data);
+
+        fetch("http://masai-api-mocker.herokuapp.com/auth/register", {
+            method: 'POST',
+
+            body: user_data,
+
+            headers: {
+
+                'Content-Type': 'application/json'
+
+            },
+        })
+        .then((res)=> {
+            return res.json();
+        })
+        .then((res)=> {
+            console.log(res);
+        })
+        .catch((err) => {
+            console.log('error:',err);
+        })
+
+    }
+
+    function Signin(e) {
+        e.preventDefault();
+
+        let form = document.getElementById("signin-form");
+
+        let user_data = {
+            username: form.user.value,
+
+            password: form.pass.value,
+        };
+
+        let data_to_send = JSON.stringify(user_data);
+
+        console.log(data_to_send);
+
+        fetch("http://masai-api-mocker.herokuapp.com/auth/login", {
+
+            method: 'POST',
+
+            body: data_to_send,
+
+            headers: {
+                'Content-Type': 'application/json',
+            },
+
+        })
+        .then((res) => {
+            return res.json();
+        })
+        .then((res) => {
+            console.log(res);
+            showProfile(user_data.username,res.token);
+        })
+        .catch((err) => {
+            console.log('error: ',err);
+        })
+
+    }
+
+    function showProfile(username,token) {
+        fetch(`http://masai-api-mocker.herokuapp.com/user/${username}`, {
+            headers: {
+                'Content-Type': 'application/json',
+
+                Authorization: `Bearer ${token}`,
+            }
+        })
+        .then((res)=> {
+            return res.json();
+        })
+        .then((res) => {
+            if(localStorage.getItem("login_movie") == null) {
+                localStorage.setItem("login_movie",JSON.stringify([]));
+            }
+            var arr = JSON.parse(localStorage.getItem("login_movie"));
+            
+            arr.push(res);
+            // console.log(arr);
+            localStorage.setItem("login_movie",JSON.stringify(arr));
+            window.location.href = "moviesearchbar.html";
+        })
+        .catch((err) => {
+            console.log(err);
+        })
+    }
+
+</script>
