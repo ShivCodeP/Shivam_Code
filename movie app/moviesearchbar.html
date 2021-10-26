@@ -100,6 +100,18 @@
 </html>
 <script>
 
+var data = JSON.parse(localStorage.getItem("login_movie"));
+  
+  if(data.length > 0) {
+  let user = document.getElementById("login");
+  user.innerHTML = null;
+  user_dropdown_register.addEventListener("click",logout);
+
+    user.innerText = data[data.length-1].username.toUpperCase()[0];
+    user_dropdown_sign.innerText = data[data.length-1].username;
+    user_dropdown_register.innerText = "Logout";
+  }
+
    let movie_div = document.getElementById("movies");
    let show_movies = document.getElementById('show_movies');
    let timerid;
